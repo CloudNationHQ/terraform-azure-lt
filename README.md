@@ -134,5 +134,5 @@ MIT Licensed. See [LICENSE](./LICENSE) for full details.
 ## References
 
 - [Documentation](https://learn.microsoft.com/en-us/azure/app-testing/load-testing/overview-what-is-azure-load-testing)
-- [Rest Api](https://learn.microsoft.com/en-us/rest/api/loadtesting/)
+- [Rest Api](https://learn.microsoft.com/en-us/rest/api/apptesting/loadtest/)
 - [Rest Api Specs](https://github.com/Azure/azure-rest-api-specs/tree/main/specification/loadtestservice/resource-manager)
