@@ -1,7 +1,7 @@
-variable "tests" {
-  description = "contains all load tests configuration"
-  type = map(object({
-    name                = optional(string)
+variable "load_test" {
+  description = "contains all load test configuration"
+  type = object({
+    name                = string
     location            = optional(string)
     resource_group_name = optional(string)
     description         = optional(string)
@@ -11,37 +11,23 @@ variable "tests" {
       identity_ids = optional(list(string))
     }))
     encryption = optional(object({
+      key_url = string
       identity = object({
         type        = string
         identity_id = string
       })
-      key_url = string
     }))
-  }))
+  })
 
   validation {
-    condition = alltrue([
-      for k, v in var.tests : (
-        v.location != null || var.location != null
-      )
-    ])
-    error_message = "location must be provided either in the config object or as a separate variable."
+    condition     = lookup(var.load_test, "location", null) != null || var.location != null
+    error_message = "location must be set on var.load_test.location or on the module-level var.location."
   }
 
   validation {
-    condition = alltrue([
-      for k, v in var.tests : (
-        v.resource_group_name != null || var.resource_group_name != null
-      )
-    ])
-    error_message = "resource group name must be provided either in the config object or as a separate variable."
+    condition     = lookup(var.load_test, "resource_group_name", null) != null || var.resource_group_name != null
+    error_message = "resource_group_name must be set on var.load_test.resource_group_name or on the module-level var.resource_group_name."
   }
-}
-
-variable "naming" {
-  description = "contains naming convention"
-  type        = map(string)
-  default     = {}
 }
 
 variable "location" {
@@ -61,4 +47,3 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
-
