@@ -7,7 +7,7 @@ module "naming" {
 
 module "rg" {
   source  = "cloudnationhq/rg/azure"
-  version = "~> 2.0"
+  version = "~> 3.0"
 
   groups = {
     demo = {
@@ -17,11 +17,11 @@ module "rg" {
   }
 }
 
-module "uai" {
+module "identity" {
   source  = "cloudnationhq/uai/azure"
-  version = "~> 2.0"
+  version = "~> 3.0"
 
-  config = {
+  identity = {
     name                = module.naming.user_assigned_identity.name
     location            = module.rg.groups.demo.location
     resource_group_name = module.rg.groups.demo.name
@@ -29,18 +29,17 @@ module "uai" {
 }
 
 module "lt" {
-  source = "../../"
+  source  = "cloudnationhq/lt/azure"
+  version = "~> 2.0"
 
-  naming = local.naming
+  load_test = {
+    name                = module.naming.load_test.name
+    location            = module.rg.groups.demo.location
+    resource_group_name = module.rg.groups.demo.name
 
-  tests = {
-    lt1 = {
-      location            = module.rg.groups.demo.location
-      resource_group_name = module.rg.groups.demo.name
-      identity = {
-        type         = "UserAssigned"
-        identity_ids = [module.uai.config.id]
-      }
+    identity = {
+      type         = "UserAssigned"
+      identity_ids = [module.identity.identity.id]
     }
   }
 
