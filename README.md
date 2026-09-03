@@ -4,15 +4,13 @@ This terraform module simplifies the creation of Azure Load Testing resources on
 
 ## Features
 
-Supports provisioning multiple load tests through a single object-driven configuration.
+Provisions a load test through a single object-driven configuration.
 
 Utilization of terratest for robust validation.
 
 Supports user-assigned managed identity configuration.
 
 Supports customer-managed key encryption settings.
-
-Offers three-tier naming hierarchy (explicit, convention-based, or key-based) for flexible resource management.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -21,13 +19,13 @@ The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.0)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 4.0)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 5.0)
 
 ## Providers
 
 The following providers are used by this module:
 
-- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 4.0)
+- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 5.0)
 
 ## Resources
 
@@ -39,15 +37,15 @@ The following resources are used by this module:
 
 The following input variables are required:
 
-### <a name="input_tests"></a> [tests](#input\_tests)
+### <a name="input_load_test"></a> [load\_test](#input\_load\_test)
 
-Description: contains all load tests configuration
+Description: contains all load test configuration
 
 Type:
 
 ```hcl
-map(object({
-    name                = optional(string)
+object({
+    name                = string
     location            = optional(string)
     resource_group_name = optional(string)
     description         = optional(string)
@@ -57,13 +55,13 @@ map(object({
       identity_ids = optional(list(string))
     }))
     encryption = optional(object({
+      key_url = string
       identity = object({
         type        = string
         identity_id = string
       })
-      key_url = string
     }))
-  }))
+  })
 ```
 
 ## Optional Inputs
@@ -77,14 +75,6 @@ Description: default azure region to be used.
 Type: `string`
 
 Default: `null`
-
-### <a name="input_naming"></a> [naming](#input\_naming)
-
-Description: contains naming convention
-
-Type: `map(string)`
-
-Default: `{}`
 
 ### <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name)
 
@@ -106,9 +96,9 @@ Default: `{}`
 
 The following outputs are exported:
 
-### <a name="output_tests"></a> [tests](#output\_tests)
+### <a name="output_load_test"></a> [load\_test](#output\_load\_test)
 
-Description: contains all load test config
+Description: load test
 <!-- END_TF_DOCS -->
 
 ## Goals
@@ -144,5 +134,5 @@ MIT Licensed. See [LICENSE](./LICENSE) for full details.
 ## References
 
 - [Documentation](https://learn.microsoft.com/en-us/azure/app-testing/load-testing/overview-what-is-azure-load-testing)
-- [Rest Api](https://learn.microsoft.com/en-us/rest/api/loadtesting/)
+- [Rest Api](https://learn.microsoft.com/en-us/rest/api/apptesting/loadtest/)
 - [Rest Api Specs](https://github.com/Azure/azure-rest-api-specs/tree/main/specification/loadtestservice/resource-manager)
